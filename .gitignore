@@ -7,3 +7,9 @@ __pycache__/
 .env
 .env.*
 !.env.example
+
+# ===== AI 学习项目运行产物（追加到 .gitignore）=====
+logs/
+data/chroma/
+data/uploads/
+data/embed_cache.json
