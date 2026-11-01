@@ -134,3 +134,4 @@ career/                  # 简历、项目故事、题库、模拟面试（W8）
 
 
 - Day 1｜打通 DeepSeek 首次调用，打印 content/total_tokens/耗时并存原始响应｜lessons/w1/day01_smoke.py、lessons/w1/out/day01_resp.json｜中文在编辑器里被存成 ?，改 UTF-8 后解决
+- Day 2｜对比 temperature/max_tokens 对输出的影响｜lessons/w1/day02_params.py、out/day02_params.md｜卡点：**kw 参数透传
