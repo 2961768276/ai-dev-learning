@@ -33,13 +33,8 @@ jobs:
         run: uv sync --frozen
 
       - name: Lint (ruff)
-        run: uv run ruff check src tests scripts
+        run: uv run ruff check src tests scripts lessons
 
-      # tests/ 为空时不跑 pytest（pytest 无测试会返回 5，导致无意义的红灯）
+      # 测试用假客户端，跑 CI 不需要 DEEPSEEK_API_KEY
       - name: Test (pytest)
-        run: |
-          if compgen -G "tests/test_*.py" > /dev/null; then
-            uv run pytest -q
-          else
-            echo "::notice title=No tests yet::tests/test_*.py 还不存在，跳过 pytest（Day 47 起启用）"
-          fi
+        run: uv run pytest -q

@@ -1,35 +1,70 @@
+"""Day 1：第一次云端调用跑通。
+
+目的：看清 OpenAI SDK 的原貌 —— content、usage.total_tokens、耗时，并把原始响应
+落盘作为证据。这一天的脚本故意不经过 `common/llm.py`（那是 Day 3 的事），
+后面所有脚本再统一走共享客户端。
+
+运行（任意目录都可以）：
+    uv run python lessons/w1/day01_smoke.py
+"""
+
+from __future__ import annotations
+
+import json
 import os
 import time
-import json,dotenv
+from pathlib import Path
+
+from dotenv import load_dotenv
 from openai import OpenAI
 
-dotenv.load_dotenv()
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+OUT_DIR = Path(__file__).resolve().parent / "out"
+RESP_FILE = OUT_DIR / "day01_resp.json"
 
-client = OpenAI(
-    api_key=os.environ['DEEPSEEK_API_KEY'],
-    base_url="https://api.deepseek.com",
-)
+load_dotenv(PROJECT_ROOT / ".env")
 
-start = time.time()
 
-response = client.chat.completions.create(
-    model="deepseek-flash",
-    messages=[
-        {"role": "user", "content": "用一句话介绍你自己"},
-    ],
-    stream=False,
-)
+def main() -> None:
+    api_key = os.getenv("DEEPSEEK_API_KEY")
+    if not api_key:
+        raise SystemExit("缺少 DEEPSEEK_API_KEY：先 `cp .env.example .env` 并填入真实 Key")
 
-os.makedirs("out", exist_ok=True)
-with open("out/day01_resp.json", "w", encoding="utf-8") as f:
-    json.dump(response.model_dump(), f, ensure_ascii=False, indent=2)
-# 三个参数各自的作用
-# resp.model_dump()：把 Pydantic 对象转成普通 dict，这是 json.dump 能接受的类型。
-# ensure_ascii=False：必须加，否则 JSON 里的中文会变成 \u4f60\u597d 这种转义，打开看不懂。
-# indent=2：格式化缩进，方便你打开文件后用眼睛检查结构。
+    client = OpenAI(
+        api_key=api_key,
+        base_url=os.getenv("DEEPSEEK_BASE_URL", "https://api.deepseek.com").rstrip("/"),
+        timeout=float(os.getenv("LLM_TIMEOUT_S", "30")),
+        max_retries=0,  # 冒烟脚本要一次看清真实错误，不要让 SDK 自动重试掩盖问题
+    )
 
-latency = time.time() - start
+    requested_model = os.getenv("LLM_MODEL", "deepseek-chat")
+    start = time.perf_counter()
+    response = client.chat.completions.create(
+        model=requested_model,
+        messages=[{"role": "user", "content": "用一句话介绍你自己"}],
+        stream=False,
+    )
+    latency_s = time.perf_counter() - start
 
-print(response.choices[0].message.content)
-print(response.usage.total_tokens)
-print(f"latency: {latency:.2f}s")
+    OUT_DIR.mkdir(parents=True, exist_ok=True)
+    RESP_FILE.write_text(
+        json.dumps(response.model_dump(), ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
+    # model_dump()：Pydantic 对象转 dict，json.dump 只认 dict/list/str/int。
+    # ensure_ascii=False：否则中文变 \u4f60\u597d，打开看不懂。
+    # indent=2：格式化，方便用眼睛检查结构。
+
+    choice = response.choices[0]
+    print(f"model        : 请求 {requested_model} → 返回 {response.model}")
+    print(f"content      : {choice.message.content}")
+    print(f"finish_reason: {choice.finish_reason}")
+    usage = response.usage
+    usage_dump = usage.model_dump() if hasattr(usage, "model_dump") else usage
+    print(f"usage        : {usage_dump}")
+    print(f"latency      : {latency_s:.2f}s")
+    print(f"raw response : {RESP_FILE.relative_to(PROJECT_ROOT)}")
+
+
+if __name__ == "__main__":
+    main()

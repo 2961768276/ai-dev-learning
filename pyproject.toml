@@ -22,3 +22,14 @@ dev = [
     "pytest>=9.2.0",
     "ruff>=0.17.3",
 ]
+
+# lint 规则显式钉死：否则 ruff 升级换默认规则集，CI 会无缘无故变红。
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "SIM", "C4", "UP"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

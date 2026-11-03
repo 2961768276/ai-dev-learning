@@ -1,23 +1,23 @@
 {
-  "id": "4a28ad20-a313-4e0f-be4b-ce2fd868efc2",
+  "id": "e500460e-18ef-4613-a095-0a3d032ce68e",
   "choices": [
     {
       "finish_reason": "stop",
       "index": 0,
       "logprobs": null,
       "message": {
-        "content": "我是一个由深度求索（DeepSeek）开发的AI助手，随时为你答疑解惑。",
+        "content": "我是由深度求索公司开发的AI助手，能帮你解答问题、处理信息和提供创意建议。",
         "refusal": null,
         "role": "assistant",
         "annotations": null,
         "audio": null,
         "function_call": null,
         "tool_calls": null,
-        "reasoning_content": "我们需要回答中文一句话介绍自己。需要简洁。可以用“我是由深度求索...”。注意公司? 模型是DeepSeek。一句话。避免过长。可以：“我是一个由深度求索（DeepSeek）开发的AI助手，随时为你答疑解惑。” 满足。"
+        "reasoning_content": "我们需要回答中文。用户要求“用一句话介绍你自己”。需要一句话。简洁。作为AI助手。中文一句话。可包含我是谁、能做什么。不要多余。确保一句话。最终只一句。"
       }
     }
   ],
-  "created": 1793462499,
+  "created": 1793712638,
   "model": "deepseek-flash",
   "object": "chat.completion",
   "metadata": null,
@@ -25,13 +25,13 @@
   "service_tier": null,
   "system_fingerprint": "bc19ba97cbe016479903222bb1578db6",
   "usage": {
-    "completion_tokens": 78,
+    "completion_tokens": 64,
     "prompt_tokens": 34,
-    "total_tokens": 112,
+    "total_tokens": 98,
     "completion_tokens_details": {
       "accepted_prediction_tokens": null,
       "audio_tokens": null,
-      "reasoning_tokens": 58,
+      "reasoning_tokens": 42,
       "rejected_prediction_tokens": null,
       "text_tokens": null
     },

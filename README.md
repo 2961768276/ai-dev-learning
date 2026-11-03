@@ -52,6 +52,12 @@ curl -s http://127.0.0.1:8000/health
 ./scripts/smoke_test.sh   # health → chat → ask → search，任一失败返回非零
 ```
 
+**代码质量（W1 起就有）**
+
+```bash
+./scripts/test.sh         # ruff check + pytest（用假客户端，不联网不花钱）
+```
+
 ## 接口
 
 | 方法 | 路径 | 说明 | 落地日 |
@@ -81,9 +87,11 @@ curl -s http://127.0.0.1:8000/health
 
 格式：`- Day X｜做了什么（一句运行结果）｜产物路径｜今天的卡点`
 
-<!-- 从 Day 1 开始往下追加，示例：
-- Day 1｜成功调用 deepseek-chat，total_tokens=58，耗时 2.1s｜lessons/w1/day01_smoke.py｜卡点：base_url 多写了 /v1
--->
+- Day 1｜打通 DeepSeek 首次调用，打印 content / finish_reason / usage / 耗时并存原始响应｜[lessons/w1/day01_smoke.py](lessons/w1/day01_smoke.py)、[lessons/w1/out/day01_resp.json](lessons/w1/out/day01_resp.json)｜卡点：中文在编辑器里被存成 `?`，改 UTF-8 后解决
+- Day 2｜对比 temperature 0 / 0.7 / 1.3 与 max_tokens=20 的影响，temperature=0 跑两次做复现性对照｜[lessons/w1/day02_params.py](lessons/w1/day02_params.py)、[lessons/w1/out/day02_params.md](lessons/w1/out/day02_params.md)｜卡点：`**kw` 参数透传；`max_tokens=20` 时 content 为空，因为 reasoning token 也吃预算
+- Day 3｜抽出统一客户端 `chat(messages, **kw)`，每调用一行 usage jsonl，连跑 3 次并打印当日累计｜[src/ai_dev_learning/common/llm.py](src/ai_dev_learning/common/llm.py)、[lessons/w1/day03_usage.py](lessons/w1/day03_usage.py)、`logs/usage.jsonl`｜卡点：配置写死在代码里、日志内容被截断，改成读 `.env` + 只截日志预览
+
+<!-- 从 Day 4 继续往下追加 -->
 
 ## 目录
 
@@ -128,10 +136,5 @@ career/                  # 简历、项目故事、题库、模拟面试（W8）
 
 ## 学习计划
 
-完整 56 天日程、每日复盘三问与教练指令模板见 `8week-plan.md`（可选提交到本仓库 `docs/`）。
+完整 56 天日程、每日复盘三问与教练指令模板见仓库根目录的 [ai-dev-learning-8week-plan.md](ai-dev-learning-8week-plan.md)。
 
-
-
-
-- Day 1｜打通 DeepSeek 首次调用，打印 content/total_tokens/耗时并存原始响应｜lessons/w1/day01_smoke.py、lessons/w1/out/day01_resp.json｜中文在编辑器里被存成 ?，改 UTF-8 后解决
-- Day 2｜对比 temperature/max_tokens 对输出的影响｜lessons/w1/day02_params.py、out/day02_params.md｜卡点：**kw 参数透传
