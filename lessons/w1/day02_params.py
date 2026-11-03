@@ -45,6 +45,7 @@ def run_case(case: dict[str, Any]) -> dict[str, Any]:
     row = {
         "label": case["label"],
         "note": case["note"],
+        "model": result["model"],  # 记录实际模型：换 flash / v4-pro 时表格才说得清
         "temperature": params.get("temperature", "默认"),
         "max_tokens": params.get("max_tokens", "默认"),
         "finish_reason": result["finish_reason"],
@@ -65,12 +66,12 @@ def run_case(case: dict[str, Any]) -> dict[str, Any]:
 
 def build_markdown(rows: list[dict[str, Any]]) -> str:
     header = (
-        "| 组别 | 说明 | temperature | max_tokens | finish_reason "
+        "| 组别 | 模型 | 说明 | temperature | max_tokens | finish_reason "
         "| prompt | completion | reasoning | total | 耗时(s) | 输出（前 40 字） |\n"
-        "|---|---|---|---|---|---|---|---|---|---|---|\n"
+        "|---|---|---|---|---|---|---|---|---|---|---|---|\n"
     )
     body = "".join(
-        f"| {r['label']} | {r['note']} | {r['temperature']} | {r['max_tokens']} "
+        f"| {r['label']} | {r['model']} | {r['note']} | {r['temperature']} | {r['max_tokens']} "
         f"| {r['finish_reason']} | {r['prompt_tokens']} | {r['completion_tokens']} "
         f"| {r['reasoning_tokens']} | {r['total_tokens']} | {r['latency_s']} "
         f"| {_cell(r['content'])} |\n"

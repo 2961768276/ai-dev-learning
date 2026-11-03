@@ -44,6 +44,10 @@ load_dotenv(ENV_FILE)
 
 PREVIEW_CHARS = 40
 DEFAULT_BASE_URL = "https://api.deepseek.com"
+# 模型名会随服务商迭代下线（deepseek-chat 已停用）。这里只放"兜底默认值"，
+# 真正的选择在 .env 的 LLM_MODEL；不确定当前有哪些模型就跑 scripts/list_models.py。
+DEFAULT_MODEL = "deepseek-flash"  # 4.1，快且便宜，日常默认
+STRONG_MODEL = "deepseek-v4-pro"  # v4，推理更强，留给难任务与对照实验
 
 
 class MissingConfigError(RuntimeError):
@@ -73,7 +77,7 @@ class LLMSettings:
         return cls(
             api_key=api_key,
             base_url=os.getenv("DEEPSEEK_BASE_URL", DEFAULT_BASE_URL).rstrip("/"),
-            model=os.getenv("LLM_MODEL", "deepseek-chat"),
+            model=os.getenv("LLM_MODEL", DEFAULT_MODEL),
             temperature=_env_float("LLM_TEMPERATURE", 0.2) or 0.0,
             max_tokens=_env_int("LLM_MAX_TOKENS", 1024),
             timeout_s=_env_float("LLM_TIMEOUT_S", 30.0) or 30.0,
@@ -111,6 +115,11 @@ def get_client() -> OpenAI:
         timeout=settings.timeout_s,
         max_retries=settings.max_retries,
     )
+
+
+def list_models() -> list[str]:
+    """向服务商确认当前可用的模型 id：模型名不要凭记忆写，直接问接口。"""
+    return [model.id for model in get_client().models.list().data]
 
 
 def chat(messages: list[dict[str, Any]], **kw: Any) -> dict[str, Any]:

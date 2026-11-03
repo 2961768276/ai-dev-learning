@@ -102,7 +102,7 @@ data/corpus/             # 语料（提交）
 data/chroma/             # 向量库持久化（gitignore）
 data/uploads/            # 上传文件（gitignore）
 logs/                    # usage / errors / tool_trace 日志（gitignore）
-scripts/                 # dev / test / smoke_test / build / eval
+scripts/                 # dev / test / smoke_test / build / eval / list_models
 tests/                   # pytest
 docs/                    # 评测报告、架构、agent 失败案例、smoke 记录
 career/                  # 简历、项目故事、题库、模拟面试（W8）
@@ -126,6 +126,18 @@ career/                  # 简历、项目故事、题库、模拟面试（W8）
 ## 环境变量
 
 见 [.env.example](.env.example)。`.env` 永不提交（`.gitignore` 已拦截），镜像里也不打包 `.env`。
+
+**模型名以接口为准**（`deepseek-chat` 已停用，2026-11 实测只剩两个）：
+
+```bash
+uv run python scripts/list_models.py   # 打印当前可用模型，写死之前先跑一次
+```
+
+| 模型 | 代次 | 用途 |
+|---|---|---|
+| `deepseek-flash` | 4.1 | 日常默认：快、便宜，会返回 `reasoning_content` |
+| `deepseek-v4-pro` | v4 | 难任务 / 对照实验，更强更贵 |
+
 
 ## 硬件约束（8GB M1）
 

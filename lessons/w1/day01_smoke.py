@@ -18,6 +18,8 @@ from pathlib import Path
 from dotenv import load_dotenv
 from openai import OpenAI
 
+from ai_dev_learning.common.llm import DEFAULT_MODEL
+
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 OUT_DIR = Path(__file__).resolve().parent / "out"
 RESP_FILE = OUT_DIR / "day01_resp.json"
@@ -37,7 +39,7 @@ def main() -> None:
         max_retries=0,  # 冒烟脚本要一次看清真实错误，不要让 SDK 自动重试掩盖问题
     )
 
-    requested_model = os.getenv("LLM_MODEL", "deepseek-chat")
+    requested_model = os.getenv("LLM_MODEL", DEFAULT_MODEL)
     start = time.perf_counter()
     response = client.chat.completions.create(
         model=requested_model,

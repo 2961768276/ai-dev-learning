@@ -34,7 +34,7 @@ class FakeCompletions:
 def make_response(
     content: str | None = "你好",
     finish_reason: str = "stop",
-    model: str = "deepseek-chat",
+    model: str = "deepseek-flash",
     request_id: str = "req_test_1",
 ) -> Any:
     usage = SimpleNamespace(

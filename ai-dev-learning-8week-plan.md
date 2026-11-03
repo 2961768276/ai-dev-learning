@@ -2,6 +2,9 @@
 
 > 基于你的真实仓库状态生成：`/Users/guo/ai-dev-learning`，origin `github.com:2961768276/ai-dev-learning`，仅 `main` 分支；Python 3.11 + uv（`uv_build` 后端，src 布局 `src/ai_dev_learning`）；dev 依赖已有 `pytest 9.2` / `ruff 0.17`；`.gitignore` 已忽略 `.env`、`.env.*` 并放行 `.env.example`；`README.md` 为空，`hello.py`、`week01-hello-llm/`、空的 `requirements.txt` 是待清理的历史残留（Day 1 处理）。
 
+> **2026-11-03 模型名更新**：`deepseek-chat` 已停用。用 `uv run python scripts/list_models.py` 查到的可用模型只有 `deepseek-flash`（4.1，日常默认）与 `deepseek-v4-pro`（v4，难任务）。下文凡写 `deepseek-chat` 的地方，一律按 `deepseek-flash` 执行；需要更强推理时换 `deepseek-v4-pro` 做对照。
+
+
 ## 0. 执行规则（先看这 6 条，再看日程）
 
 1. **时间盒**：阅读 25 + 编码 50 + 复盘 15 = 90 分钟，到点停。写不完就降级（见文末「降级规则」表），不加班。
