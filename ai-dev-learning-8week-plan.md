@@ -2,7 +2,7 @@
 
 > 基于你的真实仓库状态生成：`/Users/guo/ai-dev-learning`，origin `github.com:2961768276/ai-dev-learning`，仅 `main` 分支；Python 3.11 + uv（`uv_build` 后端，src 布局 `src/ai_dev_learning`）；dev 依赖已有 `pytest 9.2` / `ruff 0.17`；`.gitignore` 已忽略 `.env`、`.env.*` 并放行 `.env.example`；`README.md` 为空，`hello.py`、`week01-hello-llm/`、空的 `requirements.txt` 是待清理的历史残留（Day 1 处理）。
 
-> **2026-11-03 模型名更新**：`deepseek-chat` 已停用。用 `uv run python scripts/list_models.py` 查到的可用模型只有 `deepseek-flash`（4.1，日常默认）与 `deepseek-v4-pro`（v4，难任务）。下文凡写 `deepseek-chat` 的地方，一律按 `deepseek-flash` 执行；需要更强推理时换 `deepseek-v4-pro` 做对照。
+> **2026-11-03 模型名更新**：当前可用模型只有 `deepseek-flash`（4.1，日常默认）与 `deepseek-v4-pro`（v4，难任务），用 `uv run python scripts/list_models.py` 可查证。本计划全文涉及模型处已统一为 `deepseek-flash`；需要更强推理时改 `.env` 的 `LLM_MODEL=deepseek-v4-pro` 做对照。
 
 
 ## 0. 执行规则（先看这 6 条，再看日程）
@@ -39,7 +39,7 @@
 
 **Day 1 · 第一次云端调用跑通 + 仓库清场**
 - 阅读（25–30min）：DeepSeek API Docs《Your First API Call》《Chat Completions》参数表；尚硅谷 P1–P2（只建立"为什么需要框架"的全景）
-- 编码（50–55min）：`uv add openai`；写 `.env.example`（`DEEPSEEK_API_KEY=`）与 `.env`；`lessons/w1/day01_smoke.py` 调 `deepseek-chat` 一句话，打印 `content` + `usage.total_tokens` + 耗时，原始响应存 `lessons/w1/out/day01_resp.json`；顺手把 `hello.py`、`week01-hello-llm/`、空的 `requirements.txt` 挪进 `archive/` 并提交
+- 编码（50–55min）：`uv add openai`；写 `.env.example`（`DEEPSEEK_API_KEY=`）与 `.env`；`lessons/w1/day01_smoke.py` 调 `deepseek-flash` 一句话，打印 `content` + `usage.total_tokens` + 耗时，原始响应存 `lessons/w1/out/day01_resp.json`；顺手把 `hello.py`、`week01-hello-llm/`、空的 `requirements.txt` 删掉并提交
 - 复盘三问：① 这次调用实际返回了什么内容、total_tokens 是几、耗时多少秒？② 卡点在 key、base_url、依赖 哪一处，你怎么确认的？③ 明天若只改一处，改 model 还是 max_tokens，为什么？
 - commit：`Day 1: 打通 DeepSeek 首次调用并打印 usage`
 
@@ -168,7 +168,7 @@
 
 **Day 22 · LangChain 模型层**
 - 阅读（25–30min）：尚硅谷 P11–P14（模型创建与调用）；LangChain 中文文档 ChatOpenAI 页
-- 编码（50–55min）：`uv add langchain langchain-openai`；`lessons/w4/lc_model.py` 用 `ChatOpenAI(base_url=DeepSeek, model="deepseek-chat")` 跑 invoke / stream / batch 三种，打印 `usage_metadata`；差异与坑落 `lessons/w4/out/day22_lc_model.md`
+- 编码（50–55min）：`uv add langchain langchain-openai`；`lessons/w4/lc_model.py` 用 `ChatOpenAI(base_url=DeepSeek, model="deepseek-flash")` 跑 invoke / stream / batch 三种，打印 `usage_metadata`；差异与坑落 `lessons/w4/out/day22_lc_model.md`
 - 复盘三问：① stream 模式下 usage 是哪一刻拿到的？② batch 打满会不会触发限流，你怎么控制？③ 和你 Day 3 手写的客户端比，LangChain 少做了什么、多做了什么？
 - commit：`Day 22: 用 LangChain ChatOpenAI 替换手写客户端`
 
@@ -495,7 +495,7 @@ uv add fastapi "uvicorn[standard]" pydantic-settings python-multipart httpx  # W
 uv add mcp                                # W7
 ```
 
-**.env.example 全字段**：`DEEPSEEK_API_KEY` `DEEPSEEK_BASE_URL` `DEEPSEEK_BETA_BASE_URL` `LLM_MODEL=deepseek-chat` `EMBED_PROVIDER=siliconflow|ollama` `SILICONFLOW_API_KEY` `EMBED_MODEL=BAAI/bge-m3` `OLLAMA_BASE_URL` `CHROMA_DIR=./data/chroma` `TOP_K=4` `SCORE_THRESHOLD=0.35`
+**.env.example 全字段**：`DEEPSEEK_API_KEY` `DEEPSEEK_BASE_URL` `DEEPSEEK_BETA_BASE_URL` `LLM_MODEL=deepseek-flash` `EMBED_PROVIDER=siliconflow|ollama` `SILICONFLOW_API_KEY` `EMBED_MODEL=BAAI/bge-m3` `OLLAMA_BASE_URL` `CHROMA_DIR=./data/chroma` `TOP_K=4` `SCORE_THRESHOLD=0.35`
 
 **降级规则（超时/卡死时用，不许因此跳过当天）**
 

@@ -20,7 +20,7 @@ flowchart LR
     A --> R[检索服务 retriever]
     R --> C[(ChromaDB 持久化<br/>data/chroma)]
     R --> E[Embedding API<br/>bge-m3 1024 维]
-    A --> L[LLM API<br/>DeepSeek chat]
+    A --> L[LLM API<br/>deepseek-flash]
     A --> G[Agent 工具循环<br/>max_steps=5]
     G --> R
     A --> D[文档入库<br/>上传/切分/去重]
@@ -127,7 +127,7 @@ career/                  # 简历、项目故事、题库、模拟面试（W8）
 
 见 [.env.example](.env.example)。`.env` 永不提交（`.gitignore` 已拦截），镜像里也不打包 `.env`。
 
-**模型名以接口为准**（`deepseek-chat` 已停用，2026-11 实测只剩两个）：
+**模型名以接口为准**（2026-11 实测只剩两个）：
 
 ```bash
 uv run python scripts/list_models.py   # 打印当前可用模型，写死之前先跑一次
