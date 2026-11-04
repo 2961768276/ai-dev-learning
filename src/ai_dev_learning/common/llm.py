@@ -56,7 +56,7 @@ class MissingConfigError(RuntimeError):
 
 @dataclass(frozen=True)
 class LLMSettings:
-    """一次运行内不变的 LLM 配置。新增参数时只改这里 + .env.example。"""
+    """一次运行内不变的 LLM 配置。新增参数时只改这里 + .env。"""
 
     api_key: str
     base_url: str
